@@ -27,3 +27,7 @@ done
 ##
 ##ncks -h -A latlons_Quemchi.nc Quemchi/Quemchi_201801.nc 
 ##
+
+#
+#  s_rho is missing. Add.
+#
