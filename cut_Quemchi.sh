@@ -31,3 +31,6 @@ done
 #
 #  s_rho is missing. Add.
 #
+## ncks -v s_rho /var/www/html/MOSAv6/seleccion_fecha_de_datos/2019-12-05/part_3d_roms_his_20191205.nc s_rho.nc
+##
+##ncks -h -A s_rho.nc Quemchi/Quemchi_201801.nc 
