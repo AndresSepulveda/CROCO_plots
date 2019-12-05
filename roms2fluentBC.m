@@ -54,4 +54,9 @@ for t=1:tmx
 	end
 end
 
+min(allvars(:,2))
+max(allvars(:,2))
+min(allvars(:,3))
+max(allvars(:,3))
+
 dlmwrite('BC2_Fluent.csv',allvars);
