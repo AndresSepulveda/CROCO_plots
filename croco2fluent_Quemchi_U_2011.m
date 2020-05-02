@@ -31,8 +31,14 @@ tme=tini:tend;  % nc{'time'}(:);
 sigma_r=nc{'s_rho'}(:);
 
 temp=nc{'temp'}(:,:,:,:);
+   m_temp=nc{'temp'}.scale_factor;
+   n_temp=nc{'temp'}.add_offset;
 salt=nc{'salt'}(:,:,:,:);
+   m_salt=nc{'salt'}.scale_factor;
+   n_salt=nc{'salt'}.add_offset;
 u=nc{'u'}(:,:,:,:);
+   m_u=nc{'u'}.scale_factor;
+   n_u=nc{'u'}.add_offset;
 
 lonmn=min(min(lon_rho));
 lonmx=max(max(lon_rho));
@@ -54,7 +60,7 @@ for t=tini:tend
 	for j=1:m
 		if (mask_rho(j,jj) == 1)
 			for z=1:length(sigma_r)	
-			aux=[t lon_rho(j,jj) lat_rho(j,jj) sigma_r(z)*h(j,jj) u(t,z,j,indxvlon) temp(t,z,j,jj) salt(t,z,j,jj) ];
+			aux=[t lon_rho(j,jj) lat_rho(j,jj) sigma_r(z)*h(j,jj) u(t,z,j,indxvlon)*m_u+n_u temp(t,z,j,jj)*m_temp+n_temp salt(t,z,j,jj)*m_salt+n_salt ];
 			allvars=[allvars; aux];
 			end	
 		end
@@ -66,10 +72,18 @@ if length(allvars > 2)
    max(allvars(:,2))
    min(allvars(:,3))
    max(allvars(:,3))
+   min(allvars(:,5))
+   max(allvars(:,5))
+   min(allvars(:,6))
+   max(allvars(:,6))
+   min(allvars(:,7))
+   max(allvars(:,7))
 end
 
+
+
 if jj == 25
-   dlmwrite('BC_Fluent_01-21_072011_W.csv',allvars);
+   dlmwrite('BC_Fluent_01-21_072011_W.csv',allvars,'precision',5);
 else
-   dlmwrite('BC_Fluent_01-21_072011_E.csv',allvars);
+   dlmwrite('BC_Fluent_01-21_072011_E.csv',allvars,'precision',5);
 end
