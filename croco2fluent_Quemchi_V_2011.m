@@ -1,6 +1,6 @@
 more off
 
-jj=20; % 20;  %3 20
+jj=21; % 20;  %3 21 (-42.049) (was 3 20)
 
 
 nc=netcdf('quemchi_his_2011a.nc','r');
