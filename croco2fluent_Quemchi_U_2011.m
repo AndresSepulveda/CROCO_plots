@@ -49,8 +49,9 @@ indxlon=lon_rho(1,jj);
 aux1=abs((lon_u(1,:))-indxlon);
 aux2=min(aux1);
 
-indxvlon=find(aux1 == aux2)
-indxvlon=indxvlon(1);
+indxulon=find(aux1 == aux2)
+indxulon=indxulon(1);
+lon_u(1,indxulon)
 
 [m n]=size(lon_rho);
 %%tmx=length(tme);
@@ -60,7 +61,7 @@ for t=tini:tend
 	for j=1:m
 		if (mask_rho(j,jj) == 1)
 			for z=1:length(sigma_r)	
-			aux=[t lon_rho(j,jj) lat_rho(j,jj) sigma_r(z)*h(j,jj) u(t,z,j,indxvlon)*m_u+n_u temp(t,z,j,jj)*m_temp+n_temp salt(t,z,j,jj)*m_salt+n_salt ];
+			aux=[t lon_rho(j,jj) lat_rho(j,jj) sigma_r(z)*h(j,jj) u(t,z,j,indxulon)*m_u+n_u temp(t,z,j,jj)*m_temp+n_temp salt(t,z,j,jj)*m_salt+n_salt ];
 			allvars=[allvars; aux];
 			end	
 		end
