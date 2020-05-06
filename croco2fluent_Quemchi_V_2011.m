@@ -43,6 +43,7 @@ aux1=abs((lat_v(:,1))-indxlat);
 aux2=min(aux1);
 indxvlat=find(aux1 == aux2)
 indxvlat=indxvlat(1);
+lat_v(indxvlat,1)     % Display choosen latitude
 
 [m n]=size(lon_rho);
 
