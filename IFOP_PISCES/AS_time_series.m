@@ -1,4 +1,5 @@
-function AS_time_series(hisfile,gridfile,lon0,lat0,vname,vlevel,coef)
+%function AS_time_series(hisfile,gridfile,lon0,lat0,vname,vlevel,coef,titles,ymin,ymax)
+function AS_time_series(hisfile,gridfile,lon0,lat0,vname,vlevel,coef,titles)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %  Get a vertical Profile
@@ -229,6 +230,8 @@ close(nc)
 %
 %keyboard
 plot(time,var,'k')
+title(titles);
+%axis([min(time) max(time) ymin ymax])
 hold on
 plot(time,var,'r.')
 hold off
