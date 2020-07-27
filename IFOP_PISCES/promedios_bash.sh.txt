@@ -1,0 +1,10 @@
+
+ncks -v lat_rho,lon_rho,lat_u,lat_v,lon_u,lon_v,temp,salt,zeta,u,v,mask_rho,s_rho mosa_PIS_avg_Y1S1.nc Odette_fisica_Y1S1.nc
+ncks -v lat_rho,lon_rho,DCHL,NH4,PO4,Si,NO3,O2,NCHL,H,mask_rho,s_rho,zeta mosa_RIO_avg_Y3S2.nc Odette_Y3S2.nc
+
+ncap2 -s "NDCHL=NCHL+DCHL" -A Odette_PISCES_Y1_EFM.nc
+
+ncrcat Odette_fisica_Y1S1.nc Odette_fisica_Y1S2.nc Odette_fisica_Y2S1.nc Odette_fisica_Y2S2.nc Odette_fisica_Y3S1.nc Odette_fisica_Y3S2.nc Odette_fisica_Y1S2-Y3S2.nc
+ncrcat Odette_Y1S1.nc Odette_Y1S2.nc Odette_Y2S1.nc Odette_Y2S2.nc Odette_Y3S1.nc Odette_Y3S2.nc Odette_BGQ_Y1S1-Y3S2.nc
+
+ncrcat Odette_PISCES_Y1.nc Odette_PISCES_Y2.nc Odette_PISCES_Y3.nc Odette_PISCES_Y1-3.nc

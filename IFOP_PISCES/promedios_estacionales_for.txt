@@ -1,0 +1,62 @@
+#
+# Y1
+#
+
+for yr in 1 2 3
+do
+#
+#  Physics
+#
+	gzip -d Odette_fisica_Y${yr}S1.nc.gz
+	ncra -F -d time,1,3 Odette_fisica_Y${yr}S1.nc Odette_fisica_Y${yr}_EFM.nc
+	ncra -F -d time,4,6 Odette_fisica_Y${yr}S1.nc Odette_fisica_Y${yr}_AMJ.nc
+	gzip Odette_fisica_Y${yr}S1.nc &
+
+	gzip -d Odette_fisica_Y${yr}S2.nc.gz
+ncra -F -d time,1,3 Odette_fisica_Y${yr}S2.nc Odette_fisica_Y${yr}_JAS.nc
+ncra -F -d time,4,6 Odette_fisica_Y${yr}S2.nc Odette_fisica_Y${yr}_OND.nc
+gzip Odette_fisica_Y${yr}S2.nc &
+
+#
+# PISCES
+#
+
+	gzip -d Odette_Y${yr}S1.nc.gz
+	ncra -F -d time,1,3 Odette_Y${yr}S1.nc Odette_Y${yr}_EFM.nc
+	ncra -F -d time,4,6 Odette_Y${yr}S1.nc Odette_Y${yr}_AMJ.nc
+	gzip Odette_Y${yr}S1.nc &
+
+	gzip -d Odette_Y${yr}S2.nc.gz
+	ncra -F -d time,1,3 Odette_Y${yr}S2.nc Odette_Y${yr}_JAS.nc
+	ncra -F -d time,4,6 Odette_Y${yr}S2.nc Odette_Y${yr}_OND.nc
+	gzip Odette_Y${yr}S2.nc &
+
+#
+#  PISCES+PHYSICS
+#
+
+	ncks -A Odette_Y${yr}_EFM.nc Odette_fisica_Y${yr}_EFM.nc
+	rm Odette_Y${yr}_EFM.nc
+	mv Odette_fisica_Y${yr}_EFM.nc Odette_PISCES_Y${yr}_EFM.nc
+	ncap2 -s  "NDCHL=NCHL+DCHL" -A Odette_PISCES_Y${yr}_EFM.nc
+
+	ncks -A Odette_Y${yr}_AMJ.nc Odette_fisica_Y${yr}_AMJ.nc
+	rm Odette_Y${yr}_AMJ.nc
+	mv Odette_fisica_Y${yr}_AMJ.nc Odette_PISCES_Y${yr}_AMJ.nc
+	ncap2 -s   "NDCHL=NCHL+DCHL" -A  Odette_PISCES_Y${yr}_AMJ.nc 
+
+	ncks -A Odette_Y${yr}_JAS.nc Odette_fisica_Y${yr}_JAS.nc
+	rm Odette_Y${yr}_JAS.nc
+	mv Odette_fisica_Y${yr}_JAS.nc Odette_PISCES_Y${yr}_JAS.nc
+	ncap2 -s "NDCHL=NCHL+DCHL"  -A  Odette_PISCES_${yr}_JAS.nc 
+
+	ncks -A Odette_Y${yr}_OND.nc Odette_fisica_Y${yr}_OND.nc
+	rm Odette_Y${yr}_OND.nc
+	mv Odette_fisica_Y${yr}_OND.nc Odette_PISCES_Y${yr}_OND.nc
+	ncap2 -s  "NDCHL=NCHL+DCHL" -A  Odette_PISCES_Y${yr}_OND.nc 
+
+	ncrcat Odette_PISCES_Y${yr}_EFM.nc Odette_PISCES_Y${yr}_AMJ.nc Odette_PISCES_Y${yr}_JAS.nc Odette_PISCES_Y${yr}_OND.nc  Odette_PISCES_Y${yr}.nc
+
+	ncra -F -d time,1,4 Odette_PISCES_Y${yr}.nc Odette_PISCES_mean_Y${yr}.nc
+ done
+
