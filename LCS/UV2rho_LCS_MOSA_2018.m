@@ -1,3 +1,6 @@
+%
+%  ncks -F -d time,7297,8016  MOSA_sup_2018_sml_v3.nc MOSA_sup_201811_sml_v3.nc &
+%
 close all
 clear all
 oct_start
