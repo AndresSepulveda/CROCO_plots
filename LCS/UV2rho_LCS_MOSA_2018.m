@@ -54,9 +54,13 @@ for i=2:12
 			tini=8017;
 			tend=8760;
 	endswitch
-    dete=(tend-tini)+1;
-    zeta=nc{'zeta'}(:,:,:);
-    otime=nc{'ocean_time'}(:);	
+        dete=(tend-tini)+1;
+        zeta=nc{'zeta'}(:,:,:);
+        otime=nc{'ocean_time'}(:);	
+    	m_u=nc{'u'}.scale_factor;
+	n_u=nc{'u'}.add_offset;
+	m_v=nc{'v'}.scale_factor;
+	n_v=nc{'v'}.add_offset;
 	close(nc)
 
 	whos zeta otime
@@ -84,6 +88,8 @@ for i=2:12
 	    u_rho(tindex,:,:)=u(:,1:231);
 	    v_rho(tindex,:,:)=v;
 	end
+	u_rho=u_rho.*m_u + n_u;
+	v_rho=v_rho.*m_v + n_v;
 
 	a=4
 
