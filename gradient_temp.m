@@ -18,3 +18,8 @@ dy=dx;
 [Fx Fy]=gradient(temp,dx);
 
 gtemp=(Fx.*Fx + Fy.*Fy).^(0.5);
+
+gtemp
+imagesc(gtemp)
+colorbar
+caxis([0 1])
