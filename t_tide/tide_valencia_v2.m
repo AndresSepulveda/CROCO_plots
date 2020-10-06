@@ -42,10 +42,6 @@ nivelmar=nivelmar-nivelmedio; % Referenciamos respecto al nivel medio
 
 time1=datenum(year,mes,dia,hora,0,0); %Convertimos la fecha en tiempo juliano
 
-%ojo, en algunas versiones de matlab la función juliandate no existe y en su lugar hay que usar datenum
-
-
-
 % 3. Análisis de armónicos mediante T_IIDE
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Modificar%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -53,8 +49,7 @@ path_des = 'C:\Users\dgeo\croco_tools\';  %Carpeta de destino
 fichero_out='Armonicos_Valencia97.txt';  %Nombre del fichero de resultados
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[NAME,FREQ,TIDECON,XOUT]=t_tide(nivelmar,'output',[path_des fichero_out])
-[tidestruc,XOUT]=t_tide(nivelmar,'output',[path_des fichero_out])
+[tidestruc,XOUT]=t_tide(nivelmar,'output',[path_des fichero_out]);
 
    fsig=tidestruc.tidecon(:,1)>tidestruc.tidecon(:,2); % Significant peaks
    tmp=tidestruc.tidecon(fsig,1);
@@ -94,24 +89,17 @@ fichero_out='Armonicos_Valencia97.txt';  %Nombre del fichero de resultados
 %                            (3) nombre del fichero de salida
  
 
-% 5. Calculamos la marea meteorológica y la guardamos
+% 5. Calculamos la marea meteorológica
 
 meteo = nivelmar-XOUT; 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Modificar%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-marmeteo='MarMeteo_MarMenor.txt';
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-save( [path_des marmeteo], 'meteo', '-ascii')
-
 % 6. Representación gráfica
 
-figure(1)
+figure(3)
 
 subplot(3,1,1) %Nivel del mar
 plot(time1,nivelmar,'k')
 title ('Nivel del Mar (m)');
-%xlabel('Julian Time (days)')
 ylabel('NMM (m)')
 datetick('x','yyyy-mm')
 hold on
@@ -119,14 +107,13 @@ hold on
 subplot(3,1,2) %Marea astronómica
 plot(time1,XOUT,'b')
 title('Marea Astronomica (m)')
-%xlabel('Julian Time (days)')
 ylabel('NMM_a (m)')
 datetick('x','yyyy-mm')
 
 subplot(3,1,3) %Marea meteorológica
 plot(time1,meteo,'r')
 title('Marea Meteorologica (m)')
-xlabel('Tiempo Juliano (dias)')
+xlabel('Fecha ')
 ylabel('NMM_m (m)')
 datetick('x','yyyy-mm')
 
