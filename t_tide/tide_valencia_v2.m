@@ -139,4 +139,30 @@ TOTAL = [name_isig num2str(freq_isig) name_isig(:,4)  num2str(harm_isig)]
 disp(' Nombre Frecuencia Amplitud Fase ')
 
   
+aux=ismember(NAME,'K1  ','rows');
+indxK1=find(aux==1);
+aux=ismember(NAME,'O1  ','rows');
+indxO1=find(aux==1);
+aux=ismember(NAME,'M2  ','rows');
+indxM2=find(aux==1);
+aux=ismember(NAME,'S2  ','rows');
+indxS2=find(aux==1);
+
+aK1=TIDECON(indxK1,1);
+aO1=TIDECON(indxO1,1);
+aM2=TIDECON(indxM2,1);
+aS2=TIDECON(indxS2,1);
+
+disp('Factor de Forma (F)')
+
+F=(aK1+aO1)/(aM2+aS2)
+if F <0.26 
+    disp('Marea Semidiurna')
+elseif 0.25 < F  & F < 1.5
+    disp('Marea mixta con predominio semidiurno')
+elseif 1.50 < F  & F < 3
+    disp('Marea mixta con predominio diurno')
+else
+    disp('Marea Diurna')
+end    
   
