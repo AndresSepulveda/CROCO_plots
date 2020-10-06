@@ -18,7 +18,7 @@ win_start
 nc=netcdf('OS_UH-FDH022_20170628_R.nc','r');  % Easter Island
 %nc=netcdf('OS_UH-FDH015_20170628_R.nc','r');  % Papette 376944 points
 
-time=nc{'time'}(300000:end);    %Days since 17000101 / Gregorian
+time=nc{'time'}(300000:end);    %Days since 17000101 / Gregorian   % fails if the whole series is used, why?
 depth=nc{'depth'}(:);  % m
 lat=nc{'latitude'}(:);
 lon=nc{'longitude'}(:);
@@ -31,7 +31,6 @@ fecha=datetime(1700,1,1)+days(time);
 
 slvl(slvl < -30000)=NaN;
 
-figure(1)
 plot(fecha,slvl/1000)
 title([name ' ID: ',id])
 xlabel('Fecha')
@@ -82,18 +81,13 @@ fecha_v=datevec(fecha(1));
 %                            (3) nombre del fichero de salida
  
 
-% 5. Calculamos la marea meteorológica y la guardamos
+% 5. Calculamos la marea meteorológica
 
 meteo = nivelmar-XOUT; 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Modificar%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-marmeteo='MarMeteo_MarMenor.txt';
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 % 6. Representación gráfica
 
-figure(2)
+figure(3)
 
 subplot(3,1,1) %Nivel del mar
 plot(fecha,nivelmar,'k')
