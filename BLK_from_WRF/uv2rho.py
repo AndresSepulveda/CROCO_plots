@@ -1,3 +1,6 @@
+#
+# Desarrollado por Osvaldo Artal (IFOP-Putemún): osvaldo.artal@ifop.cl
+#
 from numpy import shape, zeros
 def u2rho_2d(var_u):
 	Mp,L = shape(var_u)
