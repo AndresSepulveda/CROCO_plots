@@ -1,3 +1,6 @@
+#
+# Desarrollado por Osvaldo Artal (IFOP-Putemún): osvaldo.artal@ifop.cl
+#
 from netCDF4 import Dataset
 from datetime import datetime, date, timedelta
 from scipy.interpolate import griddata
