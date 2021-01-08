@@ -15,7 +15,8 @@ win_start
 %
 % Data from: https://uhslc.soest.hawaii.edu/
 %
-nc=netcdf('OS_UH-FDH022_20170628_R.nc','r');  % Easter Island
+nc=netcdf('OS_UH-FDH181_20170628_R.nc','r');  % Durban, South Africa
+%nc=netcdf('OS_UH-FDH022_20170628_R.nc','r');  % Easter Island
 %nc=netcdf('OS_UH-FDH015_20170628_R.nc','r');  % Papette 376944 points
 
 time=nc{'time'}(300000:end);    %Days since 17000101 / Gregorian   % fails if the whole series is used, why?
