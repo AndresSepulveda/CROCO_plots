@@ -11,7 +11,9 @@
 %
 close all
 clear all
-win_start
+
+start
+% win_start
 %
 % Data from: https://uhslc.soest.hawaii.edu/
 %
