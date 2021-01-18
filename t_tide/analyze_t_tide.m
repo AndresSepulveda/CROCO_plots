@@ -17,7 +17,8 @@ start
 %
 % Data from: https://uhslc.soest.hawaii.edu/
 %
-nc=netcdf('OS_UH-FDH181_20170628_R.nc','r');  % Durban, South Africa
+nc=netcdf('OS_UH-FDH221_20170628_R.nc','r');  % Simon's Town, South Africa
+%nc=netcdf('OS_UH-FDH181_20170628_R.nc','r');  % Durban, South Africa
 %nc=netcdf('OS_UH-FDH022_20170628_R.nc','r');  % Easter Island
 %nc=netcdf('OS_UH-FDH015_20170628_R.nc','r');  % Papette 376944 points
 
