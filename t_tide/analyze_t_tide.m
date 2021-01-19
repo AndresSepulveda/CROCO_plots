@@ -22,18 +22,18 @@ nc=netcdf('OS_UH-FDH221_20170628_R.nc','r');  % Simon's Town, South Africa
 %nc=netcdf('OS_UH-FDH022_20170628_R.nc','r');  % Easter Island
 %nc=netcdf('OS_UH-FDH015_20170628_R.nc','r');  % Papette 376944 points
 
-time=nc{'time'}(500000:end);    %Days since 17000101 / Gregorian   % fails if the whole series is used, why?
+time=nc{'time'}(80000:80720);    %Days since 17000101 / Gregorian   % fails if the whole series is used, why?
 depth=nc{'depth'}(:);  % m
 lat=nc{'latitude'}(:);
 lon=nc{'longitude'}(:);
-slvl=nc{'sea_surface_height_above_reference_level'}(500000:end); % in mm. Bad = -32768
+slvl=nc{'sea_surface_height_above_reference_level'}(80000:80720); % in mm. Bad = -32768
 id=nc.id(:);
 name=nc.station_name(:);
 close(nc)
 
 fecha=datetime(1700,1,1)+days(time);
 
-slvl(slvl < -30000)=NaN;
+slvl(slvl < -5000)=NaN;
 
 plot(fecha,slvl/1000)
 title([name ' ID: ',id])
