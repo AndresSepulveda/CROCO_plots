@@ -2,8 +2,11 @@ clear all; close all; clc;
 start
 
 tided='./CROCO_FILES/croco_his.nc';  nc=netcdf(tided,'nowrite'); 
-lon=nc{'lon.rho'}(:); lat=nc{'lat_rho'}(:); 
-zeta=nc{'zeta'}(:); tim=nc{'scrum_time'}(:); tim_ini=nc{'time'}(:);
+lon=nc{'lon_rho'}(:); 
+lat=nc{'lat_rho'}(:); 
+zeta=nc{'zeta'}(:); 
+tim=nc{'scrum_time'}(:); 
+tim_ini=nc{'time'}(:);
 
 % Extraer senal de marea en la posicion,
 latBeng=-34.8; lonBeng=18;
