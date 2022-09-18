@@ -9,6 +9,13 @@
 %
 % 20201002 Andres Sepulveda (andres.sepulveda@gmail.com)
 %
+% Adaptaciones a Octave gracias a 
+%
+% https://ocefpaf.github.io/python4oceanographers/blog/2013/11/04/t_tide/
+%
+% 20220918 Andres Sepulveda (andres.sepulveda@gmail.com) 
+%
+
 close all
 clear all
 
@@ -26,17 +33,17 @@ time=nc{'time'}(80000:80720);    %Days since 17000101 / Gregorian   % fails if t
 depth=nc{'depth'}(:);  % m
 lat=nc{'latitude'}(:);
 lon=nc{'longitude'}(:);
-slvl=nc{'sea_surface_height_above_reference_level'}(80000:80720); % in mm. Bad = -32768
+slvl=nc{'sea_surface_height_above_reference_level'}(80000:80720,1,1,1); % in mm. Bad = -32768
 id=nc.id(:);
 name=nc.station_name(:);
 close(nc)
 
-fecha=datetime(1700,1,1)+days(time);
+fecha=datenum(1700,1,1)+time;
 
 slvl(slvl < -5000)=NaN;
 
 plot(fecha,slvl/1000)
-title([name ' ID: ',id])
+title([name' ' ID: ',id'])
 xlabel('Fecha')
 ylabel('Nivel del Mar [m]')
 
@@ -66,12 +73,12 @@ fecha_v=datevec(fecha(1));
   line(tidestruc.freq,tidestruc.tidecon(:,2),'linestyle',':','color',[0 .5 0]);
   set(gca,'ylim',[.0005 1],'xlim',[0 .5]);
   xlabel('Frecuencia (cph)');
-  text(tidestruc.freq,tidestruc.tidecon(:,1),tidestruc.name,'rotation',45,'vertical','base');
+  text(tidestruc.freq,tidestruc.tidecon(:,1),tidestruc.name,'rotation',45,'verticalalignment','base');
   ylabel('Amplitud (m)');
   text(.25,.2,'Constituyentes Significativos','color','b');
   text(.25,.1,'Constituyentes No Significativos','color','r');
   text(.25,.05,'Nivel Significancia 95%','color',[0 .5 0]);
-  title(['Datos ' name])
+  title(['Datos ' name'])
 
   [NAME,FREQ,TIDECON,XOUT]=t_tide(nivelmar,'output','none');
 
@@ -95,7 +102,7 @@ figure(3)
 
 subplot(3,1,1) %Nivel del mar
 plot(fecha,nivelmar,'k')
-title (['Nivel del Mar (m) ' name ]);
+title (['Nivel del Mar (m) ' name' ]);
 %xlabel('Julian Time (days)')
 ylabel('NMM (m)')
 datetick('x','yyyy-mm')
