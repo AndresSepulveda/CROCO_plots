@@ -20,6 +20,7 @@ close all
 clear all
 
 oct_start
+pkg load signal
 % win_start
 %
 % Data from: https://uhslc.soest.hawaii.edu/
