@@ -1,16 +1,20 @@
 git branch -a
 
-* DEV_2023_Octaveb
-  master
-  remotes/origin/DEV_2023_Octave
-  remotes/origin/HEAD -> origin/master
-  remotes/origin/dev_2022
-  remotes/origin/feat/python_tools_jupyter
-  remotes/origin/master
-  remotes/origin/postprocessing_python_tools_2022
-  remotes/origin/python_tools
-  remotes/origin/release
-  remotes/origin/release-v1.3
+DEV_2023_Octaveb
+master
+remotes/origin/DEV_2023_Octave
+remotes/origin/HEAD -> origin/master
+remotes/origin/dev_2022
+remotes/origin/feat/python_tools_jupyter
+remotes/origin/master
+remotes/origin/postprocessing_python_tools_2022
+remotes/origin/python_tools
+remotes/origin/release
+remotes/origin/release-v1.3
+  
+# To change the branch you are working
+
+git checkout origin/dev_tools_forecast_Colombia
   
 git status
  
