@@ -14,7 +14,7 @@ remotes/origin/release-v1.3
   
 # To change the branch you are working
 
-git checkout origin/dev_tools_forecast_Colombia
+git checkout -B remotes/origin/dev_tools_forecast_Colombia
   
 git status
  
