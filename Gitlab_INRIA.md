@@ -14,7 +14,7 @@ remotes/origin/release-v1.3
   
 # To change the branch you are working
 
-git checkout -B remotes/origin/dev_tools_forecast_Colombia
+git checkout --track origin/dev_tools_forecast_Colombia
   
 git status
  
@@ -30,11 +30,19 @@ Changes not staged for commit:
 
 no changes added to commit (use "git add" and/or "git commit -a")
 
+# If files are new
+
+git add Forecast_CROCO/*  
+
+# To upload  
+  
 git commit -am "Improve Octave compatibility"
  
 [DEV_2023_Octaveb 165f6121] Improve Octave compatibility
  3 files changed, 31 insertions(+), 20 deletions(-) 
 
+(filenames should be in green)
+  
 git status
 
 gives
@@ -45,8 +53,14 @@ Your branch is ahead of 'origin/DEV_2023_Octave' by 1 commit.
 
 nothing to commit, working tree clean
 
+# Use this if branch name is different
+  
 git push origin DEV_2023_Octaveb:DEV_2023_Octave
 
+# Or just
+  
+git push   
+  
 gives
 
 Username for 'https://gitlab.inria.fr': andres
