@@ -6,7 +6,7 @@
 
 with
 
-    ncks -v h croco_ini_sed.nc hmorph.nc
+    ncks -v h croco_grd.nc hmorph.nc
     ncrename -h -O -v h,hmorph hmorph.nc
     ncatted -O -a long_name,hmorph,o,c,"moving bathymetry " hmorph.nc
     ncatted -O -a field,hmorph,o,c,"moving bathymetry, scalar, series " hmorph.nc
