@@ -85,7 +85,7 @@ ylabel(colorbar,'[mg/mm3]','FontSize',16)
 xlabel('Lon','FontSize',20)
 ylabel('Lat','FontSize',20)
 title('MODELO','FontSize',18)
-%saveas(gcf,'path','png')
+%saveas(gcf,'path',gif')
 
 
 figure()
