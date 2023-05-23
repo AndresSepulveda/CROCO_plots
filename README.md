@@ -3,3 +3,8 @@ Random files for plotting CROCO model output
 
 # Util commands
 ncatted -O -h -a parent_grid,global,m,c,"croco_grd.nc.2" croco_grd.nc.3 croco_grd.nc.3.new
+
+
+ ncks -F -d time,1,24 20230515/croco_his.nc.3 20230516/croco_his.nc.3
+ ncks -F -d time,25,48 20230515/croco_his.nc.3 20230516/croco_his.nc.3
+ ncks -F -d time,49,72 20230515/croco_his.nc.3 20230516/croco_his.nc.3
