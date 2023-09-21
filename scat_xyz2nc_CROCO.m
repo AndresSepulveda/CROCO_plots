@@ -51,15 +51,15 @@ nw('Y') = size(xx,2);
 
 nw{'lon'}  = ncfloat('X');
 nw{'lat'}  = ncfloat('Y');
-nw{'top'} = ncfloat('Y','X');
+nw{'topo'} = ncfloat('Y','X');
 
 nw{'topo'}.long_name =  ncchar('ocean depth');
 nw{'topo'}.long_name =  'ocean depth';
 nw{'topo'}.units = ncchar('meter');
-nw{'too'}.units = 'meter';
+nw{'topo'}.units = 'meter';
 
 
-ncclose(nw);
+close(nw);
 
 %
 % Fill in the data
@@ -70,9 +70,9 @@ nc{'lon'}(:)=squeeze(xx(:,1));
 nc{'lat'}(:)=squeeze(yy(1,:));
 nc{'topo'}(:,:)=zz;
 
-ncclose(nc)
+close(nc)
 
 %  mesh(lon,lat,zz)
 % hold on
-%plot3(x,y,z,'o')
+% plot3(x,y,z,'o')
 % hold off
