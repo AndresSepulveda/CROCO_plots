@@ -8,3 +8,11 @@ ncatted -O -h -a parent_grid,global,m,c,"croco_grd.nc.2" croco_grd.nc.3 croco_gr
  ncks -F -d time,1,24 20230515/croco_his.nc.3 20230516/croco_his.nc.3
  ncks -F -d time,25,48 20230515/croco_his.nc.3 20230516/croco_his.nc.3
  ncks -F -d time,49,72 20230515/croco_his.nc.3 20230516/croco_his.nc.3
+
+# Creating big files
+
+mode = bitor(nc_noclobber_mode,nc_64bit_offset_mode); nc_create_empty(clmname,mode); nc = netcdf(clmname,'write');
+
+If the function nc_create_empty is not found add this to your start.m
+
+addpath([myutilpath,'mexcdf/snctools'])
