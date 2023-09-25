@@ -16,3 +16,7 @@ mode = bitor(nc_noclobber_mode,nc_64bit_offset_mode); nc_create_empty(clmname,mo
 If the function nc_create_empty is not found add this to your start.m
 
 addpath([myutilpath,'mexcdf/snctools'])
+
+# For animations
+
+convert -delay 100 croco_his_*.png all.gif
