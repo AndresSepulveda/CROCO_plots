@@ -20,3 +20,9 @@ addpath([myutilpath,'mexcdf/snctools'])
 # For animations
 
 convert -delay 100 croco_his_*.png all.gif
+
+# For GPU
+
+Use nvfortran in jobcomp
+modify .baschrc to update nvfotran location
+nvidia-smi for GPU info
