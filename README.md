@@ -25,7 +25,9 @@ convert -delay 100 croco_his_*.png all.gif
 
 Use nvfortran in jobcomp
 
-modify .baschrc to update nvfotran location
+modify .baschrc to update nvfortran location
+
+Add key OPENACC in cppdefs.h (instead of MPI/OpenMP?)
 
 nvidia-smi for GPU info
 
