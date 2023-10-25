@@ -28,3 +28,5 @@ Use nvfortran in jobcomp
 modify .baschrc to update nvfotran location
 
 nvidia-smi for GPU info
+
+You can select your card with the environment variable NVCOMPILER_ACC_DEVICE_NUM, I think default is 0. The number correspond to the number(s) returned by nvaccelinfo. See https://docs.nvidia.com/hpc-sdk//compilers/openacc-gs/index.html#env-vars  (Thanks to RBenshila) 
