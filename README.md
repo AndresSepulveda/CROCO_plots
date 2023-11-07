@@ -29,6 +29,6 @@ modify .baschrc to update nvfortran location
 
 Add key OPENACC in cppdefs.h (instead of MPI/OpenMP?)
 
-nvidia-smi for GPU info
+nvidia-smi for GPU info and monitor usage
 
 You can select your card with the environment variable NVCOMPILER_ACC_DEVICE_NUM, I think default is 0. The number correspond to the number(s) returned by nvaccelinfo. See https://docs.nvidia.com/hpc-sdk//compilers/openacc-gs/index.html#env-vars  (Thanks to RBenshila) 
