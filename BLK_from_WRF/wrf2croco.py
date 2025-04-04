@@ -1,6 +1,3 @@
-#
-# Desarrollado por Osvaldo Artal (IFOP-Putemún): osvaldo.artal@ifop.cl
-#
 from netCDF4 import Dataset
 from datetime import datetime, date, timedelta
 from scipy.interpolate import griddata
@@ -8,18 +5,18 @@ from uv2rho import u2rho_2d,v2rho_2d
 
 import numpy as np
 
+today = date.today().strftime("%Y%m%d")
+#today = '20250123'
 
-today2 = date.today()
-today = today2.strftime("%Y%m%d")
+romsdirec = '/data/test_wrf2croco/';
+wrfdirec = '/data/test_wrf2croco/';
 
-romsdirec = './CROCO_FILES/';
-wrfdirec = './WRF/';
 
 gridfile = romsdirec+'croco_grd.nc'  
-wrffile = wrfdirec+today+'/wrfout'+str(today2)+'.nc'
-print wrffile
+wrffile = wrfdirec+today+'/wrfforecast_'+str(today)+'.nc'
+print(wrffile)
 
-# Extrae datos de grilla ROMS
+# Extrae informacion grilla ROMS
 ng = Dataset(gridfile)
 latr = ng.variables['lat_rho'][:]
 latu = ng.variables['lat_u'][:]
@@ -35,24 +32,23 @@ xir = ng.dimensions['xi_rho'].size
 xiu = ng.dimensions['xi_u'].size
 xiv = ng.dimensions['xi_v'].size
 
+# Extrae informacion salida  WRF
 ncw = Dataset(wrffile)
-time = ncw.variables['time'][:];
-latw = ncw.variables['south_north'][:];
-lonw = ncw.variables['west_east'][:];
-sst = ncw.variables['SST'][:];
-t2m = ncw.variables['T_2m'][:];
-rh = ncw.variables['rh_2m'][:];
-u10 = ncw.variables['u_10m_gr'][:];
-v10 = ncw.variables['v_10m_gr'][:];
-rain1 = ncw.variables['precip_g'][:];
-rain2 = ncw.variables['precip_c'][:];
-sw_d = ncw.variables['SW_d'][:];
-lw_d = ncw.variables['LW_d'][:];
-lw_u = ncw.variables['LW_u_toa'][:];
-sh = ncw.variables['SH'][:];
-lh = ncw.variables['LH'][:];
+time = ncw.variables['XTIME'][:];
+latw = ncw.variables['XLAT'][0,:,:];
+lonw = ncw.variables['XLONG'][0,:,:];
+t2m = ncw.variables['T2'][:]
+pres = ncw.variables['PSFC'][:];
+qvap = ncw.variables['QVAPOR'][:,0,:,:];
+u10 = ncw.variables['U10'][:];
+v10 = ncw.variables['V10'][:];
+rain1 = ncw.variables['RAINNC'][:];
+rain2 = ncw.variables['RAINC'][:];
+sw_d = ncw.variables['SWDOWN'][:];
+lw_d = ncw.variables['GLW'][:];
+lw_u = ncw.variables['OLR'][:];
 
-nt = ncw.dimensions['time'].size
+nt = ncw.dimensions['Time'].size
 ny = ncw.dimensions['south_north'].size
 nx = ncw.dimensions['west_east'].size
 
@@ -60,9 +56,7 @@ nx = ncw.dimensions['west_east'].size
 
 # tiempo
 t0 = date.toordinal(date.today()) -  date.toordinal(date(2000,1,1))
-tf = date.toordinal(date.today()) -  date.toordinal(date(2000,1,1)) + 5 
-dt = (time[2] - time[1]) / 24
-btime = np.arange(t0,tf,dt)
+btime = np.array([t0 + i/24 for i in range(nt)])
 
 # Lluvia [cm/dia]
 rain = (rain1 + rain2)/10 #% Paso mm a cm
@@ -75,13 +69,19 @@ prain[prain<0] = 0
 lw = lw_d-lw_u
 
 # Humedad relativa
-rh = rh/100
+#rh = rh/100
+svp1=611.2
+svp2=17.67
+svp3=29.65
+svpt0=273.15
+eps=0.622
 
-## Interpolando datos
-print('Interpolando Datos')
-X,Y = np.meshgrid(lonw,latw)
+rh = (1.E2 * (pres * qvap / (qvap * (1. - eps) + eps)) / (svp1 * np.exp(svp2 * (t2m - svpt0) / (t2m - svp3)))) / 100
 
-bulkfile = romsdirec+'/croco_blk_WRF_'+str(t0)+'.nc'
+t2m = t2m - 273.15
+
+# Escribe netCDF
+bulkfile = wrfdirec+'SCRATCH/croco_blk_'+today+'.nc'
 nc = Dataset(bulkfile,'w')
 
 nc.createDimension('bulk_time',nt)
@@ -103,18 +103,22 @@ radlw_in = nc.createVariable('radlw_in','f8', ('bulk_time','eta_rho','xi_rho',))
 radsw = nc.createVariable('radsw','f8', ('bulk_time','eta_rho','xi_rho',))
 prate = nc.createVariable('prate','f8', ('bulk_time','eta_rho','xi_rho',))
 
+bulk_time.cycle_length = 0.0
+##Interpolando datos
+print('Interpolando Datos')
+
 for cc in range(1,nt+1):
 	print('Procesando Datos', cc)	
 	bulk_time[cc-1] = btime[cc-1]
-	tair[cc-1] = griddata((X.flatten(),Y.flatten()), t2m[cc-1].flatten(), (lonr, latr), method='linear')
-	rhum[cc-1] = griddata((X.flatten(),Y.flatten()), rh[cc-1].flatten(), (lonr, latr), method='linear')
-	uwnd[cc-1] = griddata((X.flatten(),Y.flatten()), u10[cc-1].flatten(), (lonu, latu), method='linear')
-	vwnd[cc-1] = griddata((X.flatten(),Y.flatten()), v10[cc-1].flatten(), (lonv, latv), method='linear')
+	tair[cc-1] = griddata((lonw.flatten(),latw.flatten()), t2m[cc-1].flatten(), (lonr, latr), method='linear')
+	rhum[cc-1] = griddata((lonw.flatten(),latw.flatten()), rh[cc-1].flatten(), (lonr, latr), method='linear')
+	uwnd[cc-1] = griddata((lonw.flatten(),latw.flatten()), u10[cc-1].flatten(), (lonu, latu), method='linear')
+	vwnd[cc-1] = griddata((lonw.flatten(),latw.flatten()), v10[cc-1].flatten(), (lonv, latv), method='linear')
 	wspd[cc-1] = np.sqrt(u2rho_2d(np.squeeze(uwnd[cc-1]))**2 + v2rho_2d(np.squeeze(vwnd[cc-1])**2))
-	radlw[cc-1] = griddata((X.flatten(),Y.flatten()), lw[cc-1].flatten(), (lonr, latr), method='linear')
-	radlw_in[cc-1] = griddata((X.flatten(),Y.flatten()), lw_d[cc-1].flatten(), (lonr, latr), method='linear')
-	radsw[cc-1] = griddata((X.flatten(),Y.flatten()), sw_d[cc-1].flatten(), (lonr, latr), method='linear')
-	prate[cc-1] = griddata((X.flatten(),Y.flatten()), prain[cc-1].flatten(), (lonr, latr), method='linear')
+	radlw[cc-1] = griddata((lonw.flatten(),latw.flatten()), lw[cc-1].flatten(), (lonr, latr), method='linear')
+	radlw_in[cc-1] = griddata((lonw.flatten(),latw.flatten()), lw_d[cc-1].flatten(), (lonr, latr), method='linear')
+	radsw[cc-1] = griddata((lonw.flatten(),latw.flatten()), sw_d[cc-1].flatten(), (lonr, latr), method='linear')
+	prate[cc-1] = griddata((lonw.flatten(),latw.flatten()), prain[cc-1].flatten(), (lonr, latr), method='linear')
 
 nc.close()
 
