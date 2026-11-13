@@ -58,14 +58,10 @@
 %                          longitude the eastward / northward velocity),
 %                          drawn in the coordinates of the view, so that
 %                          they follow the flow with the vertical
-<<<<<<< HEAD
 %                          exaggeration; "w x" multiplies w; the
 %                          arrows are at fixed depths "Vec. z (m)"
 %                          (z <= 0, e.g. 0 -10 -50 -100 -200; auto:
 %                          regular depths);
-=======
-%                          exaggeration; "w x" multiplies w;
->>>>>>> 892d0fb90f11475ca2ca6c876f2364e3187f8d65
 %     Isosurface         : surface where the variable is equal to a
 %                          value (on regular z levels), transparency;
 %     Wind vectors (output file) / Wind vectors from BLK/FRC file...:
@@ -611,10 +607,7 @@ if ~isempty(S.f3) && ishghandle(S.f3)
   if ~isempty(layers) && ~isfield(layers,'src'), [layers.src]=deal([]); end
   if ~isempty(layers) && ~isfield(layers,'pmode'), [layers.pmode]=deal(0); end
   if ~isempty(layers) && ~isfield(layers,'wfac'), [layers.wfac]=deal(1); end
-<<<<<<< HEAD
   if ~isempty(layers) && ~isfield(layers,'vdep'), [layers.vdep]=deal([]); end
-=======
->>>>>>> 892d0fb90f11475ca2ca6c876f2364e3187f8d65
   vr=[]; if strcmp(T0.hisfile,S.hisfile) && isfield(T0,'vr'), vr=T0.vr; end
   setappdata(S.f3,'stop',1);
   delete(S.f3);
@@ -646,11 +639,7 @@ if ~isempty(S.topo), T.topo=S.topo(T.ii,T.jj); end
 T.coslat=cos(mean(T.lat(:))*pi/180);
 T.gridfile=S.gridfile; T.hisfile=S.hisfile;
 T.layers=struct('type',{},'var',{},'pos',{},'cmin',{},'cmax',{},'cmap',{},...
-<<<<<<< HEAD
                 'alpha',{},'visible',{},'vec',{},'vskip',{},'vscale',{},'hg',{},'src',{},'pmode',{},'wfac',{},'vdep',{});
-=======
-                'alpha',{},'visible',{},'vec',{},'vskip',{},'vscale',{},'hg',{},'src',{},'pmode',{},'wfac',{});
->>>>>>> 892d0fb90f11475ca2ca6c876f2364e3187f8d65
 T.vr=struct('var',{},'cmin',{},'cmax',{},'cmap',{});   % colour range and map per variable
 T.zrange=[NaN NaN];
 T.exagval=NaN;
@@ -839,7 +828,6 @@ uicontrol(f3,'Style','text','Units','normalized','Position',[x0+.1 y .045 .035],
           'HorizontalAlignment','left','BackgroundColor',bg);
 T.hvscale=uicontrol(f3,'Style','edit','Units','normalized','Position',[x0+.145 y .045 .037],...
           'String','','Callback',@cb_prop,'TooltipString','1: the largest vector = SKIP cells');
-<<<<<<< HEAD
 y=y-.04;
 T.hvdlab=uicontrol(f3,'Style','text','Units','normalized','Position',[x0 y .07 .033],'String','Vec. z (m)',...
           'HorizontalAlignment','left','BackgroundColor',bg,'Visible','off');
@@ -848,9 +836,6 @@ T.hvdep=uicontrol(f3,'Style','edit','Units','normalized','Position',[x0+.07 y .1
           'TooltipString',['Depths z (m, <= 0) of the vectors of the vertical section, e.g. ',...
                            '0 -10 -50 -100 -200 -500; auto (or empty): regular depths']);
 y=y-.05;
-=======
-y=y-.07;
->>>>>>> 892d0fb90f11475ca2ca6c876f2364e3187f8d65
 uicontrol(f3,'Style','text','Units','normalized','Position',[x0 y .11 .035],'String','Vert. exaggeration',...
           'HorizontalAlignment','left','BackgroundColor',bg);
 T.hexag=uicontrol(f3,'Style','popupmenu','Units','normalized','Position',[x0+.11 y .08 .037],...
@@ -1274,11 +1259,7 @@ f3=ancestor(src,'figure'); T=guidata(f3);
 var='';
 if ~isempty(T.vars), var=ifelse(any(strcmp(T.vars,'temp')),'temp',T.vars{1}); end
 L=struct('type',type,'var',var,'pos',0,'cmin',NaN,'cmax',NaN,'cmap',1,...
-<<<<<<< HEAD
          'alpha',1,'visible',1,'vec',0,'vskip',max(1,round(numel(T.ii)/20)),'vscale',1,'hg',[],'src',[],'pmode',0,'wfac',1,'vdep',[]);
-=======
-         'alpha',1,'visible',1,'vec',0,'vskip',max(1,round(numel(T.ii)/20)),'vscale',1,'hg',[],'src',[],'pmode',0,'wfac',1);
->>>>>>> 892d0fb90f11475ca2ca6c876f2364e3187f8d65
 if any(strcmp(type,{'w','wfile'}))
   if strcmp(type,'w')
     S=T.hiswind;
@@ -1489,7 +1470,6 @@ function [hv,T]=section_vectors(T,ax,L,Z,c)
 % exaggeration of the view; w is multiplied by L.wfac. Scale 1: the
 % largest vector, as displayed (vertical exaggeration included) = 0.8
 % SKIP cells (arrows do not touch). One arrow every SKIP points along the
-<<<<<<< HEAD
 % section, at fixed depths z (m) given by the user (L.vdep, "Vec. z (m)"),
 % or by default regular depths 0, -dz, -2dz ... (dz: 1, 2 or 5 x 10^n,
 % about 10 levels down to the deepest point of the section). Velocities
@@ -1497,11 +1477,6 @@ function [hv,T]=section_vectors(T,ax,L,Z,c)
 % and the surface (resp. the lower level and the bottom) the value of
 % that level; no arrow under the bottom. Redrawn when the vertical
 % exaggeration changes.
-=======
-% section, on 10 levels evenly spread between the bottom and the surface
-% (velocities interpolated in z). Redrawn when the vertical exaggeration
-% changes.
->>>>>>> 892d0fb90f11475ca2ca6c876f2364e3187f8d65
 %
 hv=[];
 [u,T]=get_var(T,'u'); [v,T]=get_var(T,'v');
@@ -1516,21 +1491,12 @@ iswe=strcmp(L.type,'vj');
 if L.pmode                                    % constant lat/lon: east/north
   a=repmat(T.angle,[1 1 size(u,3)]);
   if iswe, uh=u.*cos(a)-v.*sin(a); else, uh=u.*sin(a)+v.*cos(a); end
-<<<<<<< HEAD
   [x,y,z,uh,hb]=geo_section(T,Z,uh,L.type,L.pos);
   [~,~,~,ws]=geo_section(T,Z,w,L.type,L.pos);
 elseif iswe                                   % grid line: u (xi direction)
   x=T.lon(:,c); y=T.lat(:,c); z=squeeze(Z(:,c,:)); uh=squeeze(u(:,c,:)); ws=squeeze(w(:,c,:)); hb=T.h(:,c);
 else                                          % grid line: v (eta direction)
   x=T.lon(c,:)'; y=T.lat(c,:)'; z=squeeze(Z(c,:,:)); uh=squeeze(v(c,:,:)); ws=squeeze(w(c,:,:)); hb=T.h(c,:)';
-=======
-  [x,y,z,uh]=geo_section(T,Z,uh,L.type,L.pos);
-  [~,~,~,ws]=geo_section(T,Z,w,L.type,L.pos);
-elseif iswe                                   % grid line: u (xi direction)
-  x=T.lon(:,c); y=T.lat(:,c); z=squeeze(Z(:,c,:)); uh=squeeze(u(:,c,:)); ws=squeeze(w(:,c,:));
-else                                          % grid line: v (eta direction)
-  x=T.lon(c,:)'; y=T.lat(c,:)'; z=squeeze(Z(c,:,:)); uh=squeeze(v(c,:,:)); ws=squeeze(w(c,:,:));
->>>>>>> 892d0fb90f11475ca2ca6c876f2364e3187f8d65
 end
 n=numel(x);
 if n<2, return, end
@@ -1545,20 +1511,13 @@ end
 sk=max(1,round(L.vskip));
 N=size(z,2);
 ii=(1:sk:n)';
-<<<<<<< HEAD
 zv=L.vdep(:)';                                % arrows at fixed depths z (m)
 if isempty(zv), zv=auto_zlevels(max(hb(:))); end
 nk=numel(zv); U=NaN(numel(ii),nk); W=U; ZZ=U;
-=======
-nz=min(N,10);                                 % arrows on nz levels evenly spread
-fz=((1:nz)-0.5)/nz;                           % between the bottom and the surface
-nk=nz; U=NaN(numel(ii),nz); W=U; ZZ=U;
->>>>>>> 892d0fb90f11475ca2ca6c876f2364e3187f8d65
 for q=1:numel(ii)
   zc=z(ii(q),:); uc=uh(ii(q),:); wc=ws(ii(q),:);
   g=isfinite(zc) & isfinite(uc) & isfinite(wc);
   if sum(g)<2, continue, end
-<<<<<<< HEAD
   zc=zc(g); uc=uc(g); wc=wc(g);
   [zc,o]=sort(zc); uc=uc(o); wc=wc(o);
   in=zv>=-hb(ii(q)) & zv<=max(0,zc(end));    % between the bottom and the surface
@@ -1566,12 +1525,6 @@ for q=1:numel(ii)
   ZZ(q,in)=zv(in);                            % rho level: value of that level
   U(q,in)=interp1(zc,uc,zt);
   W(q,in)=L.wfac*interp1(zc,wc,zt);
-=======
-  zt=min(zc(g))+fz*(max(zc(g))-min(zc(g)));
-  ZZ(q,:)=zt;
-  U(q,:)=interp1(zc(g),uc(g),zt);
-  W(q,:)=L.wfac*interp1(zc(g),wc(g),zt);
->>>>>>> 892d0fb90f11475ca2ca6c876f2364e3187f8d65
 end
 E=1; if isfield(T,'exagval') && T.exagval>0, E=T.exagval; end
 sp=sqrt(U.^2+(E*W).^2); smax=max(sp(isfinite(sp)));   % displayed lengths
@@ -1607,7 +1560,6 @@ end
 setappdata(hv(1),'arrows',[x0 y0 z0 dlon(ok) dlat(ok) dZ(ok)]);   % origins and displacements
 return
 %
-<<<<<<< HEAD
 function zv=auto_zlevels(hmax)
 % regular depths 0, -dz, -2dz ... above hmax (dz: 1, 2 or 5 x 10^n, ~10 levels)
 if ~(hmax>0), zv=0; return, end
@@ -1616,8 +1568,6 @@ dz=c(find(c>=0.99*hmax/10,1));
 zv=-(0:dz:hmax); zv(zv==0)=0;
 return
 %
-=======
->>>>>>> 892d0fb90f11475ca2ca6c876f2364e3187f8d65
 function [x,y,z,v,h,m]=geo_section(T,Z,V,type,val)
 %
 % Vertical section at a constant latitude (type 'vj', W-E) or longitude
@@ -1706,11 +1656,7 @@ set(T.hlist,'String',names);
 h=[T.hvis T.hremove T.hvar T.hpos T.hposmode T.hcmin T.hcmax T.hauto T.hcmap T.halpha T.hvec T.hvskip T.hvscale];
 set(T.hvscale,'TooltipString','1: the largest vector = SKIP cells');
 if T.sel<1 || T.sel>n
-<<<<<<< HEAD
   set(T.hwmode,'Visible','off'); set(T.hvec,'Visible','on'); set([T.hwfaclab T.hwfac T.hvdlab T.hvdep],'Visible','off');
-=======
-  set(T.hwmode,'Visible','off'); set(T.hvec,'Visible','on'); set([T.hwfaclab T.hwfac],'Visible','off');
->>>>>>> 892d0fb90f11475ca2ca6c876f2364e3187f8d65
   set(T.hposmode,'Visible','off'); set(T.hposlab,'Visible','on');
   set(T.hlist,'Value',[]);
   set(h,'Enable','off');
@@ -1772,14 +1718,9 @@ set(T.hvec,'Value',L.vec); set(T.hvskip,'String',num2str(L.vskip)); set(T.hvscal
 set(T.hvec,'Visible',ifelse(strcmp(L.type,'w'),'off','on'));
 isv=any(strcmp(L.type,{'vj','vi'}));
 pv=get(T.hvec,'Position'); pv(3)=ifelse(isv,.13,.19); set(T.hvec,'Position',pv);
-<<<<<<< HEAD
 set([T.hwfaclab T.hwfac T.hvdlab T.hvdep],'Visible',ifelse(isv,'on','off'));
 set(T.hwfac,'String',num2str(L.wfac),'Enable','on');
 set(T.hvdep,'String',ifelse(isempty(L.vdep),'auto',strtrim(sprintf('%g ',L.vdep))),'Enable','on');
-=======
-set([T.hwfaclab T.hwfac],'Visible',ifelse(isv,'on','off'));
-set(T.hwfac,'String',num2str(L.wfac),'Enable','on');
->>>>>>> 892d0fb90f11475ca2ca6c876f2364e3187f8d65
 switch L.type
   case 'vj', set(T.hvec,'String','Vectors (u,w)','TooltipString','Velocity vectors u+w in the plane of the W-E section');
   case 'vi', set(T.hvec,'String','Vectors (v,w)','TooltipString','Velocity vectors v+w in the plane of the S-N section');
@@ -1792,15 +1733,9 @@ if strcmp(L.type,'w')
   if wind_mode(L)==2, set(T.hvscale,'Enable','off'); end
   if wind_mode(L)>=3, set([T.hcmin T.hcmax T.hauto T.hcmap],'Enable','off'); end
 elseif ~any(strcmp(L.type,{'h','vj','vi'})) || ~any(strcmp(T.vars,'u')) || ~any(strcmp(T.vars,'v'))
-<<<<<<< HEAD
   set([T.hvec T.hvskip T.hvscale T.hwfac T.hvdep],'Enable','off');
 elseif ~L.vec
   set([T.hwfac T.hvdep],'Enable','off');
-=======
-  set([T.hvec T.hvskip T.hvscale T.hwfac],'Enable','off');
-elseif ~L.vec
-  set(T.hwfac,'Enable','off');
->>>>>>> 892d0fb90f11475ca2ca6c876f2364e3187f8d65
 end
 draw_cbar(f3);
 return
@@ -1913,7 +1848,6 @@ L.vec=get(T.hvec,'Value');
 L.vskip=max(1,round(num(T.hvskip,L.vskip)));
 L.vscale=num(T.hvscale,L.vscale);
 L.wfac=num(T.hwfac,L.wfac);
-<<<<<<< HEAD
 if any(strcmp(L.type,{'vj','vi'}))             % depths of the section vectors
   str=strtrim(strrep(get(T.hvdep,'String'),',',' '));
   if isempty(str) || strcmpi(str,'auto')
@@ -1929,8 +1863,6 @@ if any(strcmp(L.type,{'vj','vi'}))             % depths of the section vectors
     end
   end
 end
-=======
->>>>>>> 892d0fb90f11475ca2ca6c876f2364e3187f8d65
 T.layers(T.sel)=L;
 set_status3(f3,'Computing the layer...'); drawnow;
 T=render_layer(T,T.sel);

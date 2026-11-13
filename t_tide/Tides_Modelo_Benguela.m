@@ -1,12 +1,9 @@
 clear all; close all; clc;
 start
 
-tided='./CROCO_FILES/croco_his.nc';  nc=netcdf(tided,'nowrite'); 
-lon=nc{'lon_rho'}(:); 
-lat=nc{'lat_rho'}(:); 
-zeta=nc{'zeta'}(:); 
-tim=nc{'scrum_time'}(:); 
-tim_ini=nc{'time'}(:);
+tided='croco_his.nc';  nc=netcdf(tided,'nowrite'); 
+lon=nc{'LON_RHO'}(:); lat=nc{'LAT_RHO'}(:); 
+zeta=nc{'ZETA'}(:); tim=nc{'SCRUM_TIME'}(:); tim_ini=nc{'TIME'}(:);
 
 % Extraer senal de marea en la posicion,
 latBeng=-34.8; lonBeng=18;
@@ -15,6 +12,7 @@ for nm=1:size(zeta,1)
 end
 
 pcolor(lon,lat,squeeze(zeta(1,:,:))); shading interp; colormap(jet(64))
+%plot(ssh)
 
 nivelmar=ssh-nanmean(ssh);
 
