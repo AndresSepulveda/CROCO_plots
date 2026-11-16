@@ -1,13 +1,15 @@
-function oct_topo_cap(infile,outfile,varname,value)
+function oct_topo_cap(infile,outfile,varname,value,fillmiss)
 %
 %  oct_topo_cap(INFILE,OUTFILE)
 %  oct_topo_cap(INFILE,OUTFILE,VARNAME,VALUE)
+%  oct_topo_cap(INFILE,OUTFILE,VARNAME,VALUE,FILLMISS)
 %
 %  Copy the NetCDF file INFILE to OUTFILE and, in OUTFILE, replace all
 %  the positive values (land topography) of the variable VARNAME
-%  (default 'topo') by VALUE (default +50). The negative values
-%  (bathymetry), the zeros and the missing values (_FillValue,
-%  missing_value, NaN) are not changed. INFILE is not modified.
+%  (default 'topo') by VALUE (default +50). The missing values
+%  (_FillValue, missing_value, NaN) are also set to VALUE (default
+%  FILLMISS=true; FILLMISS=false keeps them missing). The negative values
+%  (bathymetry) and the zeros are not changed. INFILE is not modified.
 %
 %  - scale_factor / add_offset: the comparison and the new value are
 %    in physical units (VALUE is packed before writing).
@@ -17,6 +19,7 @@ function oct_topo_cap(infile,outfile,varname,value)
 %  Example:
 %    oct_topo_cap('etopo.nc','etopo_cap50.nc')            % topo > 0 -> 50
 %    oct_topo_cap('gebco.nc','gebco_cap.nc','elevation',50)
+%    oct_topo_cap('etopo.nc','etopo_cap50.nc','topo',50,false)   % keep missing
 %
 %  Needs the octave-netcdf package (pkg load netcdf).
 %
@@ -27,10 +30,11 @@ function oct_topo_cap(infile,outfile,varname,value)
 %  your option) any later version.
 %
 if nargin<2
-  error('Usage: oct_topo_cap(infile,outfile[,varname[,value]])')
+  error('Usage: oct_topo_cap(infile,outfile[,varname[,value[,fillmiss]]])')
 end
 if nargin<3 || isempty(varname), varname='topo'; end
 if nargin<4 || isempty(value),   value=50;       end
+if nargin<5 || isempty(fillmiss), fillmiss=true; end
 if ~exist(infile,'file')
   error(['oct_topo_cap: file not found: ',infile])
 end
@@ -95,8 +99,11 @@ for i0=0:step:nslab-1
   val=double(raw)*sf+ao;                  % physical values
   pos=val>0 & ~miss;
   npos=npos+nnz(pos); nneg=nneg+nnz(val<0 & ~miss); nmiss=nmiss+nnz(miss);
+  nchg=nchg+nnz(pos & val~=value);
+  if fillmiss
+    pos=pos | miss;                       % missing values -> VALUE too
+  end
   if any(pos(:))
-    nchg=nchg+nnz(pos & val~=value);
     raw(pos)=vraw;
     if nd==0
       netcdf.putVar(ncid,vid,raw);
@@ -112,6 +119,7 @@ gid=netcdf.getConstant('NC_GLOBAL');
 hist=getatt(ncid,gid,'history','');
 if ~ischar(hist), hist=''; end
 line=sprintf('%s: oct_topo_cap: %s > 0 set to %g',datestr(now,'yyyy-mm-dd HH:MM:SS'),varname,value);
+if fillmiss, line=[line,sprintf(' (missing values too: %d)',nmiss)]; end
 netcdf.reDef(ncid);
 if isempty(hist)
   netcdf.putAtt(ncid,gid,'history',line);
@@ -121,8 +129,13 @@ end
 netcdf.endDef(ncid);
 netcdf.close(ncid);
 disp(sprintf('oct_topo_cap: %s in %s',varname,outfile))
-disp(sprintf('  %d positive values set to %g (%d were different), %d negative and %d missing values unchanged',...
-             npos,value,nchg,nneg,nmiss))
+if fillmiss
+  disp(sprintf('  %d positive values (%d were different) and %d missing values set to %g; %d negative values unchanged',...
+               npos,nchg,nmiss,value,nneg))
+else
+  disp(sprintf('  %d positive values set to %g (%d were different), %d negative and %d missing values unchanged',...
+               npos,value,nchg,nneg,nmiss))
+end
 return
 %
 function v=getatt(ncid,vid,name,def)
