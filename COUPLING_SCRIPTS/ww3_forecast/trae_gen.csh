@@ -1,0 +1,1 @@
+wget -c "http://oos.soest.hawaii.edu/thredds/ncss/grid/hioos/model/atm/ncep_global/NCEP_Global_Atmospheric_Model_best.ncd?var=ugrd10m,vgrd10m,tmpsfc,tmp2m&spatial=bb&north=URLAT&south=LLLAT&west=LLLON&east=URLON&time_start=DINIT00:00:00Z&time_end=DFINT00:00:00Z&addLatLon" -O WW3_GFS.nc
