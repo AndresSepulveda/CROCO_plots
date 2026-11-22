@@ -34,9 +34,32 @@
 #    - WW3 v6.07 input files (UNST grid, netCDF outputs with
 #      ww3_ounf / ww3_ounp), spectral output at EMEC test sites
 #    - Restart chaining between consecutive forecasts
+#    - One working folder per simulation (RUNS/<launch date>)
 #    - Stop when ww3_grid fails (no mod_def.ww3)
 #
 #======================================================================
+#
+# Schedule parameters
+#
+export GRID=0
+   export PLOTGRID=0
+export INITIAL=1
+export RESTART=0
+export FORCING=1
+  export GET_GFS=1
+   export DOWNLOADGFS=1
+  export CURRENTS=1
+   export GET_CMEMS=1
+    export DOWNLOADCMEMS=1
+  export LEVELS=1
+export NEST=0
+export RUN=1
+  #export EXEC="mpirun -np 4"
+  export EXEC=
+export OUT=1
+export OUTPNT=1
+export PLOTOUT=1
+export CLEAN=0
 #
 # Environment for Crontab
 #
@@ -121,7 +144,6 @@ POINTS="
  -3.3790  58.9705  'BilliaC_NS'
  -2.8250  59.1500  'FallWarnes'
  -3.1000  58.7120  'PentlandF '
- -3.1350  58.6600  'InnerSound'
 "
 #
 # Time zone of study area
@@ -146,6 +168,8 @@ export FHMAX=$(( ( $(date -u -d $DAY_END +%s) - $(date -u -d $TODAY +%s) ) / 360
 # Credentials: run "copernicusmarine login" once on this machine, or
 # export COPERNICUSMARINE_SERVICE_USERNAME / _PASSWORD in the crontab.
 #
+export COPERNICUSMARINE_SERVICE_USERNAME=asepulveda
+export COPERNICUSMARINE_SERVICE_PASSWORD=And2cmems
 export CMEMS_CUR_ID=cmems_mod_nws_phy-cur_anfc_1.5km-2D_PT1H-i
 export CMEMS_SSH_ID=cmems_mod_nws_phy-ssh_anfc_1.5km-2D_PT1H-i
 export CMEMS_UVAR=uo
@@ -164,34 +188,31 @@ export OUTINT=3600      # fields
 export PNTINT=3600      # spectra at points
 export PLOTINT=6        # hours between maps
 #
-# Schedule parameters
-#
-export GRID=1
-   export PLOTGRID=1
-export INITIAL=0
-export RESTART=0
-export FORCING=0
-  export GET_GFS=0
-   export DOWNLOADGFS=0
-  export CURRENTS=0
-   export GET_CMEMS=0
-    export DOWNLOADCMEMS=0
-export LEVELS=0
-export NEST=0
-export RUN=0
-  #export EXEC="mpirun -np 4"
-  export EXEC=
-export OUT=0
-export OUTPNT=0
-export PLOTOUT=0
-export CLEAN=0
-#
 #===========================================================
 #              END USER DEFINED PARAMETERS
 #===========================================================
 #
-cd $RUNDIR
-mkdir -p $OUTDIR $RESTDIR $ARCHDIR
+#
+# Each simulation runs in its own folder RUNS/<launch date>, so that
+# several simulations can run at the same time. Static files are taken
+# from BASEDIR; downloads are shared per forecast day in FORCING/<TODAY>.
+#
+export BASEDIR=$RUNDIR
+export LAUNCH=$(date -u +%Y%m%d_%H%M%S)
+export SIMDIR=$BASEDIR/RUNS/$LAUNCH
+while [ -e $SIMDIR ] ; do sleep 1 ; LAUNCH=$(date -u +%Y%m%d_%H%M%S) ; SIMDIR=$BASEDIR/RUNS/$LAUNCH ; done
+export FORCDIR=$BASEDIR/FORCING/$TODAY
+mkdir -p $SIMDIR $FORCDIR/GFS $RESTDIR $ARCHDIR
+cd $SIMDIR
+ln -s $FORCDIR/GFS GFS
+for f in CMEMS_cur.nc CMEMS_ssh.nc ; do ln -s $FORCDIR/$f $f ; done
+for f in mod_def.input $WW3_config.msh $WW3_config.obc ${WW3_config}_obc_lonlat.txt ; do
+  [ -f $BASEDIR/$f ] && $CP $BASEDIR/$f .
+done
+export RUNDIR=$SIMDIR
+export OUTDIR=$SIMDIR/OUTPUT
+mkdir -p $OUTDIR
+echo "... simulation folder $SIMDIR"
 #
 # Output point list (used by the grid, ww3_shel and the plots)
 #
@@ -284,6 +305,9 @@ EOF
     echo "ERROR in ww3_grid (see ww3_grid.out)" ; tail -5 ww3_grid.out ; exit 1
   fi
   $CP mod_def.ww3 mod_def.input
+  for f in mod_def.input $WW3_config.msh $WW3_config.obc ${WW3_config}_obc_lonlat.txt ${WW3_config}_grid.png ; do
+    [ -f $f ] && $CP $f $BASEDIR/
+  done
 fi
 if [ ! -s mod_def.input ] ; then
   echo "ERROR: mod_def.input not found, run once with GRID=1" ; exit 1
@@ -402,24 +426,24 @@ if [ $GET_CMEMS = 1 ] ; then
  if [ $DOWNLOADCMEMS = 1 ] ; then
   if [ $CURRENTS = 1 ] ; then
    echo "Downloading Copernicus Marine hourly currents"
-   $RM -f CMEMS_cur.nc
+   $RM -f $FORCDIR/CMEMS_cur.nc
    $CMEMS subset --dataset-id $CMEMS_CUR_ID \
      --variable $CMEMS_UVAR --variable $CMEMS_VVAR \
      --minimum-longitude $CLON0 --maximum-longitude $CLON1 \
      --minimum-latitude $CLAT0 --maximum-latitude $CLAT1 \
      --start-datetime ${DINI}T00:00:00 --end-datetime ${DFIN}T00:00:00 \
-     --output-directory $RUNDIR --output-filename CMEMS_cur.nc \
+     --output-directory $FORCDIR --output-filename CMEMS_cur.nc \
      --overwrite > cmems_cur.out 2>&1
   fi
   if [ $LEVELS = 1 ] ; then
    echo "Downloading Copernicus Marine hourly sea level"
-   $RM -f CMEMS_ssh.nc
+   $RM -f $FORCDIR/CMEMS_ssh.nc
    $CMEMS subset --dataset-id $CMEMS_SSH_ID \
      --variable $CMEMS_ZVAR \
      --minimum-longitude $CLON0 --maximum-longitude $CLON1 \
      --minimum-latitude $CLAT0 --maximum-latitude $CLAT1 \
      --start-datetime ${DINI}T00:00:00 --end-datetime ${DFIN}T00:00:00 \
-     --output-directory $RUNDIR --output-filename CMEMS_ssh.nc \
+     --output-directory $FORCDIR --output-filename CMEMS_ssh.nc \
      --overwrite > cmems_ssh.out 2>&1
   fi
  fi
@@ -527,11 +551,12 @@ $
    $DAY_STR 000000   $PNTINT  $DAY_END 000000
 $
 EOF
+if [ $PNTINT -gt 0 ] ; then
 awk '{printf "   %9.4f %9.4f  %c%-10s%c\n", $1, $2, 39, substr($3,2,length($3)-2), 39}' points.list \
     >> ./ww3_shel.inp.exp
+echo "     0.0   0.0  'STOPSTRING'" >> ./ww3_shel.inp.exp
+fi
 cat << EOF | sed -e 's/#.*//; s/  *$//' >> ./ww3_shel.inp.exp
-$
-     0.0   0.0  'STOPSTRING'
 $
 $ Type 3 : Output along  track.
 $
@@ -571,7 +596,7 @@ fi
 # ww3_ounf creates netCDF output files for selected variables
 #
 NTOUT=$(( ( $(date -u -d $DAY_END +%s) - $(date -u -d $DAY_STR +%s) ) / $OUTINT + 1 ))
-NTPNT=$(( ( $(date -u -d $DAY_END +%s) - $(date -u -d $DAY_STR +%s) ) / $PNTINT + 1 ))
+[ $PNTINT -gt 0 ] && NTPNT=$(( ( $(date -u -d $DAY_END +%s) - $(date -u -d $DAY_STR +%s) ) / $PNTINT + 1 )) || OUTPNT=0
 if [ $OUT = 1 ] ; then
   echo "... creating netCDF field output files"
   $RM -f $OUTDIR/ww3.??????.nc
@@ -666,10 +691,10 @@ fi
 #
 # Archive and clean
 #
-mkdir -p $ARCHDIR/$TODAY
-$CP $OUTDIR/ww3.*.nc *.inp *.out points.list $ARCHDIR/$TODAY/ 2>/dev/null
+mkdir -p $ARCHDIR/$LAUNCH
+$CP $OUTDIR/ww3.*.nc *.inp *.out points.list $ARCHDIR/$LAUNCH/ 2>/dev/null
 if [ $CLEAN = 1 ] ; then
  $RM -f *.inp
  $RM -f out_grd.ww3 out_pnt.ww3 wind.ww3 current.ww3 level.ww3 restart.ww3 nest.ww3
 fi
-echo "... WW3 forecast $TODAY done"
+echo "... WW3 forecast $TODAY done in $SIMDIR"
