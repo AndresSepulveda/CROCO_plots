@@ -1,0 +1,23 @@
+#======================================================================
+#  Python packages needed by the WW3TOOLS Orkney forecast scripts
+#  install with:  pip install -r requirements.txt
+#  (cfgrib needs the ecCodes library; wgrib2 is used as fallback)
+#
+#  This file is part of WW3TOOLS (GNU General Public License v2+)
+#  Copyright (c) 2011-2012 by Patrick Marchesiello
+#  e-mail:patrick.marchesiello@ird.fr
+#
+#  Updated November 2026 by Andres Sepulveda:
+#    - Python dependencies of the Orkney forecast
+#======================================================================
+numpy
+scipy
+netCDF4
+xarray
+cfgrib
+eccodes
+matplotlib
+shapely>=2.0
+pyshp
+gmsh
+copernicusmarine>=2.0
